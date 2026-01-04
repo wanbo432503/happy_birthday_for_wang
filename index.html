@@ -42,8 +42,12 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-        // 模拟本地图片文件列表 (请确保图片路径正确)
-        const imageFiles = ['images/1.jpg', 'images/2.jpg', 'images/3.jpg', 'images/4.jpg', 'images/5.jpg', 'images/6.jpg', 'images/7.jpg', 'images/8.jpg', 'images/9.jpg', 'images/10.jpg', 'images/11.jpg', 'images/12.jpg'];
+        const imageFiles = [];
+        const totalImages = 66; // 图片总数
+
+        for (let i = 1; i <= totalImages; i++) {
+            imageFiles.push(`images/${i}.jpg`);
+        }
 
         let scene, camera, renderer, composer, controls, planetGroup;
         const raycaster = new THREE.Raycaster();
