@@ -43,7 +43,7 @@
         import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
         const imageFiles = [];
-        const totalImages = 66; // 图片总数
+        const totalImages = 65; // 图片总数
 
         for (let i = 1; i <= totalImages; i++) {
             imageFiles.push(`images/${i}.jpg`);
@@ -187,7 +187,7 @@
             imageFiles.forEach((url, i) => {
                 loader.load(url, (tex) => {
                     const aspect = tex.image.width / tex.image.height;
-                    const size = 0.5;
+                    const size = 1.2;
                     const geo = new THREE.PlaneGeometry(size * (aspect > 1 ? 1 : aspect), size / (aspect > 1 ? aspect : 1));
                     const mat = new THREE.MeshBasicMaterial({ 
                         map: tex, 
