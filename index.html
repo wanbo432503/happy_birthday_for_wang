@@ -93,9 +93,9 @@
 
             // 1. 三层超亮粒子系统
             // 核心层：暗红色体积感
-            createLayer(8000, 4.7, 0.12, 0xff2200, 0.6); 
+            createLayer(5000, 4.7, 0.12, 0xff2200, 0.6); 
             // 表面层：明亮橙色 (主视觉)
-            createLayer(20000, 5.0, 0.08, 0xff8800, 0.9);
+            createLayer(10000, 5.0, 0.08, 0xff8800, 0.9);
             // 大气层：高亮黄色 (震撼感来源)
             createLayer(5000, 5.4, 0.06, 0xffff00, 1.0); 
 
@@ -155,8 +155,8 @@
 
         function createRings() {
             const ringSettings = [
-                { r: 8.5, color: 0xffffff, count: 4000, size: 0.04 },
-                { r: 11.0, color: 0xffaa44, count: 3000, size: 0.03 }
+                { r: 8.5, color: 0xffffff, count: 10000, size: 0.05 },
+                { r: 11.0, color: 0xffaa44, count: 10000, size: 0.05 }
             ];
             ringSettings.forEach(s => {
                 const geo = new THREE.BufferGeometry();
@@ -181,11 +181,11 @@
 
         function loadSafeThumbnails() {
             const loader = new THREE.TextureLoader();
-            const radius = 5.25; 
+            const radius = 5.5; 
 
             imageFiles.forEach((url, i) => {
                 loader.load(url, (tex) => {
-                    const size = 0.55; // 进一步减小缩略图，更精致
+                    const size = 0.6; // 进一步减小缩略图，更精致
                     const aspect = tex.image.width / tex.image.height;
                     const geo = new THREE.PlaneGeometry(size * (aspect > 1 ? 1 : aspect), size / (aspect > 1 ? aspect : 1));
                     
@@ -193,7 +193,7 @@
                     const mat = new THREE.MeshBasicMaterial({ 
                         map: tex, 
                         side: THREE.DoubleSide,
-                        color: new THREE.Color(0.3, 0.3, 0.3), // 显著降低基础亮度，抵消辉光效果
+                        color: new THREE.Color(0.2, 0.2, 0.2), // 显著降低基础亮度，抵消辉光效果
                         transparent: true,
                         opacity: 1.0,
                         toneMapped: false // 关键：不受色调映射影响，保持内容细节
