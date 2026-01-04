@@ -18,11 +18,31 @@
             color: #ffaa00; font-size: 12px; letter-spacing: 2px; pointer-events: none;
             text-shadow: 0 0 8px rgba(255,150,0,1); z-index: 10;
         }
+        /* 新增：音乐控制按钮样式 */
+        #music-control {
+            position: absolute; top: 20px; right: 20px;
+            width: 40px; height: 40px; line-height: 40px; text-align: center;
+            color: rgba(255, 255, 255, 0.5); font-size: 24px;
+            cursor: pointer; z-index: 101; user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        #music-control:hover {
+            border-color: #ffaa00;
+            color: #ffaa00;
+        }
     </style>
 </head>
 <body>
 
-    <div id="ui-hint">粒子记忆空间 • 触摸旋转 • 点击图片放大</div>
+    <div id="ui-hint">记忆空间 • 触摸旋转 • 点击图片放大</div>
+    
+    <!-- 新增：音乐文件与控制按钮 -->
+    <!-- 请确保 music 目录下有 bgm.mp3 文件，或者修改下方的 src -->
+    <audio id="bgm" src="music/bgm.mp3" loop preload="auto"></audio>
+    <div id="music-control">♪</div>
+
     <div id="overlay"><img id="expanded-img" src=""></div>
 
     <script type="importmap">
@@ -55,6 +75,48 @@
         
         // 用于区分点击和拖拽
         let pointerDownPos = new THREE.Vector2();
+
+        // 新增：音乐控制逻辑
+        const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('music-control');
+        let musicInited = false;
+
+        function initMusic() {
+            // 浏览器策略：必须由用户交互触发播放
+            window.addEventListener('pointerdown', () => {
+                if (!musicInited) {
+                    bgm.volume = 0.5; // 设置音量 0-1
+                    bgm.play().then(() => {
+                        updateMusicIcon(true);
+                    }).catch(e => console.log('等待用户交互播放音乐'));
+                    musicInited = true;
+                }
+            }, { once: true }); // 只执行一次
+
+            // 按钮手动开关
+            musicBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // 阻止事件冒泡，防止触发场景点击
+                if (bgm.paused) {
+                    bgm.play();
+                    updateMusicIcon(true);
+                } else {
+                    bgm.pause();
+                    updateMusicIcon(false);
+                }
+            });
+        }
+
+        function updateMusicIcon(isPlaying) {
+            if (isPlaying) {
+                musicBtn.style.color = '#ffaa00';
+                musicBtn.style.textShadow = '0 0 10px #ffaa00';
+                musicBtn.style.borderColor = '#ffaa00';
+            } else {
+                musicBtn.style.color = 'rgba(255, 255, 255, 0.5)';
+                musicBtn.style.textShadow = 'none';
+                musicBtn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            }
+        }
 
         function createExtremeGlowTexture() {
             const canvas = document.createElement('canvas');
@@ -104,6 +166,9 @@
 
             createRings();
             loadSafeThumbnails();
+            
+            // 初始化音乐监听
+            initMusic();
 
             const renderPass = new RenderPass(scene, camera);
             const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
